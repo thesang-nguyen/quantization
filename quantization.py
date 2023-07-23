@@ -1,4 +1,5 @@
 import os
+import bisect
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -42,11 +43,8 @@ def quantize(flat_img, intervals=5, bins=256):
 
     flat_quant = []
     for val in flat_img:
-        # NOTE could use binary search here since upper_bounds is sorted
-        for i in range(intervals):
-            if upper_bounds[i] <= val < upper_bounds[i+1]:
-                flat_quant.append(reconstr_vals[i])
-                break
+        i = bisect.bisect_right(upper_bounds, val)  # binary search
+        flat_quant.append(reconstr_vals[i-1])
     return np.array(flat_quant)
 
 
